@@ -1,15 +1,29 @@
+'use client';
+
+import React from 'react'
+import { useRouter } from 'next/navigation';
+import MainContainer from 'components/MainContainer';
+import PrimaryButton from 'components/PrimaryButton';
+
+const styles = {
+  title: 'text-3xl font-bold font-heading',
+  description: 'py-6 text-base',
+}
+
 export default function Page() {
+  const router = useRouter();
+
+  const handleStartQuiz = () => {
+    router.push('/');
+  };
+
   return (
-    <div className="hero min-h-screen">
-      <div className="hero-content text-center">
-        <div className="max-w-md">
-          <h1 className="text-3xl font-bold font-heading">Quizzical</h1>
-          <p className="py-6 text-base">
+      <MainContainer centerText={true}>
+          <h1 className={styles.title}>Quizzical</h1>
+          <p className={styles.description}>
             A fun little quiz game built with Next.js, Tailwind CSS and DaisyUI.
           </p>
-          <button className="btn btn-primary btn-md px-12 py-6 text-base rounded-2xl">Start Quiz</button>
-        </div>
-      </div>
-    </div>
+          <PrimaryButton onClick={handleStartQuiz}>Start Quiz</PrimaryButton>
+      </MainContainer>
   );
 }
