@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quizzical
+
+A simple quiz game built with Next.js and React to showcase React learning. The app fetches 5 multiple-choice questions from the [Open Trivia Database](https://opentdb.com/) and lets the user answer them.
+
+## Tech Stack
+
+- **Next.js 16** -- React framework with file-based routing
+- **React 19** -- UI library
+- **Tailwind CSS 4** -- Utility-first CSS framework
+- **DaisyUI 5** -- Tailwind CSS component library
+- **TypeScript 5** -- Static type checking
+- **ESLint 9** -- Linting
+
+## Prerequisites
+
+- **Node.js** v24.14.0
+- **PNPM** (see below)
+- Any code editor (VSCode, Cursor, etc.)
+
+## About PNPM
+
+[PNPM](https://pnpm.io/) is a fast, disk-efficient package manager for Node.js. Unlike npm, which copies packages into each project's `node_modules/`, PNPM stores every package version once in a global content-addressable store and creates hard links into your project. This saves significant disk space and speeds up installs.
+
+### Installing PNPM
+
+Node.js 24 ships with [Corepack](https://nodejs.org/api/corepack.html), which can manage PNPM for you:
+
+```bash
+corepack enable pnpm
+```
+
+Alternatively, you can install it globally via npm:
+
+```bash
+npm install -g pnpm
+```
+
+Verify the installation:
+
+```bash
+pnpm --version
+```
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the repository**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/<your-username>/quiz-react-project-app.git
+cd quiz-react-project-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Run the development server**
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command          | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `pnpm dev`       | Start the development server on port 3000    |
+| `pnpm build`     | Create an optimized production build          |
+| `pnpm start`     | Serve the production build locally            |
+| `pnpm lint`      | Run ESLint to check for code issues           |
+| `pnpm lint:fix`  | Run ESLint and automatically fix issues       |
 
-## Deploy on Vercel
+## How Questions Are Fetched
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The quiz questions come from the [Open Trivia Database API](https://opentdb.com/api_config.php). The fetching logic lives in `utilities/getQuestionData.ts` and works in three steps:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Request a session token** -- A token is requested from `opentdb.com/api_token.php`. This token ensures the API does not return duplicate questions within the same session.
+
+2. **Fetch questions** -- Using that token, the app requests 5 medium-difficulty multiple-choice questions from `opentdb.com/api.php`.
+
+3. **Handle token exhaustion** -- If the API returns response code `4` (all available questions for that token have been served), the token is automatically reset and the request is retried.
