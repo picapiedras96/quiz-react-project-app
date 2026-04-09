@@ -1,29 +1,27 @@
 'use client';
+import React, { useEffect } from 'react'
+import getQuestionData from '@/utilities/getQuestionData';
 
-import React from 'react'
-import { useRouter } from 'next/navigation';
-import MainContainer from 'components/MainContainer';
-import PrimaryButton from 'components/PrimaryButton';
-
-const styles = {
-  title: 'text-3xl font-bold font-heading',
-  description: 'py-6 text-base',
-}
+/** requirements
+ * start page
+ * quiz page
+ * pull 5 questions from API: https://opentdb.com/api_config.php
+ * tally score and display at the end
+ * restart button to start over
+ * style incorrect and correct answers
+ */
 
 export default function Page() {
-  const router = useRouter();
+  async function fetchQuestionData() {
+    const questionData = await getQuestionData();
+    console.log("Question Data:", questionData);
+  }
 
-  const handleStartQuiz = () => {
-    router.push('/');
-  };
+  useEffect(() => {
+    fetchQuestionData();
+  }, []);
 
   return (
-      <MainContainer centerText={true}>
-          <h1 className={styles.title}>Quizzical</h1>
-          <p className={styles.description}>
-            A fun little quiz game built with Next.js, Tailwind CSS and DaisyUI.
-          </p>
-          <PrimaryButton onClick={handleStartQuiz}>Start Quiz</PrimaryButton>
-      </MainContainer>
-  );
+    <div>Page</div>
+  )
 }
